@@ -29,8 +29,8 @@ variable "tags" {
     type = map
 
     default = {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-        Environment = "Lufthansa Hackathon"
-        Owner       = "perry@confluent.io"
+        Environment = "<ENVIRIONMENT>"
+        Owner       = "<EMAIL>"
   }
 }
 
