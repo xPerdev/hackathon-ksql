@@ -63,11 +63,11 @@ chown confluent:confluent /home/confluent/.ccloud/config
 # Install Confluent Hub Client
 wget "http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz"
 
-mkdir /home/confluent/opt/confluent/confluent-hub
+mkdir -p /home/confluent/opt/confluent/confluent-hub
 tar -C /home/confluent/opt/confluent/confluent-hub/ -xvf confluent-hub-client-latest.tar.gz
 rm ./confluent-hub-client-latest.tar.gz
 
-chown confluent:confluent -R home/confluent/opt/confluent/
+chown confluent:confluent -R /home/confluent/opt/confluent/
 
 cat <<'EOF' >> /home/confluent/.profile
 
