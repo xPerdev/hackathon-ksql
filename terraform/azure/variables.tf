@@ -45,6 +45,10 @@ variable "atmfrauddetectiondemo" {
   default = "https://github.com/xPerdev/hackathon-ksql/archive/master.zip"
 }
 
+variable "cp_all_in_one_cloud_repo" {
+  default = "https://github.com/confluentinc/examples/archive/master.zip"
+}
+
 variable "confluent_home_value" {
   default = "/home/confluent/opt"
 }
@@ -55,4 +59,34 @@ variable "instance_count" {
     vms = 1
     lbs = 0
   }
+}
+
+variable "ccloud_bootstrap_server" {
+  type = string
+  description = "Bootstrap server URL for the Confluent Cloud Kafka Cluster"
+}
+
+variable "ccloud_api_key" {
+  type = string
+  description = "API Key for the principal to connect to the Confluent Cloud Kafka Cluster"
+}
+
+variable "ccloud_api_secret" {
+  type = string
+  description = "Secret for the principal to connect to the Confluent Cloud Kafka Cluster"
+}
+
+variable "ccloud_schema_registry_url" {
+  type = string
+  description = "URL to connect to the Confluent Cloud managed Schema Registry"  
+}
+
+variable "ccloud_schema_registry_api_key" {
+  type = string
+  description = "API Key for the principal to connect to the Confluent Cloud managed Schema Registry"
+}
+
+variable "ccloud_schema_registry_secret" {
+  type = string
+  description = "API Key for the principal to connect to the Confluent Cloud managed Schema Registry"
 }
