@@ -46,7 +46,7 @@ variable "atmfrauddetectiondemo" {
 }
 
 variable "cp_all_in_one_cloud_repo" {
-  default = "https://github.com/confluentinc/examples/archive/master.zip"
+  default = "https://github.com/confluentinc/examples/archive/5.3.1-post.zip"
 }
 
 variable "confluent_home_value" {
