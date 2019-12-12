@@ -50,7 +50,7 @@ bootstrap.servers=${ccloud_broker_endpoint}
 ssl.endpoint.identification.algorithm=https
 security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${ccloud_api_key}" password\="${ccloud_api_secret}"";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${ccloud_api_key}" password\="${ccloud_api_secret}";
 
 # If you are using Confluent Cloud Schema Registry, add the following configuration parameters
 basic.auth.credentials.source=USER_INFO
@@ -60,18 +60,39 @@ EOF
 
 chown confluent:confluent /home/confluent/.ccloud/config
 
+# Install Confluent Hub Client
+wget "http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz"
+
+mkdir /home/confluent/opt/confluent/confluent-hub
+tar -C /home/confluent/opt/confluent/confluent-hub/ -xvf confluent-hub-client-latest.tar.gz
+rm ./confluent-hub-client-latest.tar.gz
+
+chown confluent:confluent -R home/confluent/opt/confluent/
+
+cat <<'EOF' >> /home/confluent/.profile
+
+# set PATH so it includes confluent hub client bin if it exists
+if [ -d "$HOME/opt/confluent/confluent-hub/bin" ] ; then
+    PATH="$HOME/opt/confluent/confluent-hub/bin:$PATH"
+fi
+EOF
+
 # install Confluent Platform on Docker connecting to Confluent Cloud
 cd /home/confluent/opt
 wget ${cp_all_in_one_cloud_repo}
-unzip master.zip
-mv ./examples-master/cp-all-in-one-cloud .
+unzip 5.3.1-post.zip
+mv ./examples-5.3.1-post/cp-all-in-one-cloud .
 mkdir cp-all-in-one-cloud/scripts
 chmod 755 cp-all-in-one-cloud/scripts
-mv ./examples-master/ccloud/ccloud-generate-cp-configs.sh ./cp-all-in-one-cloud/scripts
+mv ./examples-5.3.1-post/ccloud/ccloud-generate-cp-configs.sh ./cp-all-in-one-cloud/scripts
 chown confluent:confluent -R /home/confluent/opt/cp-all-in-one-cloud/
-rm master.zip
-rm -r examples-master
+rm 5.3.1-post.zip
+rm -r examples-5.3.1-post
 cd cp-all-in-one-cloud
+
+# Set ports for Control Center and ksql 
+sed -i 's;\"9021:9021\";\"80:9021\";g' /home/confluent/opt/cp-all-in-one-cloud/docker-compose.yml
+sed -i 's;CONTROL_CENTER_KSQL_ADVERTISED_URL: \"http:\/\/localhost:8089\";CONTROL_CENTER_KSQL_ADVERTISED_URL: \"http:\/\/$HOSTPUBIP:8089\";g' /home/confluent/opt/cp-all-in-one-cloud/docker-compose.yml
 
 # Generate the a file of ENV variables used by Docker to connect to a Confluent Cloud Kafka Cluster
 . /home/confluent/opt/cp-all-in-one-cloud/scripts/ccloud-generate-cp-configs.sh /home/confluent/.ccloud/config
